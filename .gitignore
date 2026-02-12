@@ -1,0 +1,24 @@
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Databases and results (generated data)
+*.db
+results/
+
+# Experiment outputs (if they are generated and not input)
+tests/experiment/CalcFold/
+!tests/experiment/CalcFold/*.gin   # keep template input files if needed
+
+# Virtual environment
+venv/
+env/
+.env
+
+# IDE settings (if any)
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
