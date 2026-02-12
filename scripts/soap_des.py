@@ -4,10 +4,14 @@ from ase.visualize import view
 from dscribe.descriptors import SOAP
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from pathlib import Path
 
-experimental = read('/home/vito/PythonProjects/ASEProject/CARLO/gnff/Fine_tun/exp_2.cif')
+script_dir = Path(__file__).parent
+project_root = script_dir.parent
+
+experimental = read(project_root / 'data/experimental.cif')
 # experimental_2 =  read('/home/vito/PythonProjects/ASEProject/CARLO/gnff/Fine_tun/exp_2_MUT_2.cif')
-experimental_2 = read('/home/vito/PythonProjects/PythonProject/Fine_tunning/experiment/CalcFold/out1.cif')
+experimental_2 = read(project_root / 'tests/single_param_cal/CalcFold/out1.cif')
 
 soap = SOAP(
     species=["C", "H", "O", "N"],  # Elements in your system

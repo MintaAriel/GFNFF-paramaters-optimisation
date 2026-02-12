@@ -1,29 +1,27 @@
 import pandas as pd
 import sqlite3
-import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-import numpy as np
-from scipy.ndimage import label
+from pathlib import Path
 
-# from tabulate import tabulate
+script_dir = Path(__file__).parent
+project_root = script_dir.parent
 
-d10_rmsd = '/home/vito/PythonProjects/PythonProject/results/10_500.db'
-d20_rmsd = '/home/vito/PythonProjects/PythonProject/results/20_500.db'
-d30_rmsd = '/home/vito/PythonProjects/PythonProject/results/30_500.db'
+d10_rmsd = project_root / 'results/10_500.db'
+d20_rmsd = project_root / 'results/20_500.db'
+d30_rmsd = project_root / 'results/30_500.db'
 
-d10_c_rmsd = '/home/vito/PythonProjects/PythonProject/results/10_500_rmsd_cor.db'
-d20_c_rmsd = '/home/vito/PythonProjects/PythonProject/results/20_500_rmsd_cor.db'
-d30_c_rmsd = '/home/vito/PythonProjects/PythonProject/results/30_500_rmsd_cor.db'
+d10_c_rmsd = project_root / 'results/10_500_rmsd_cor.db'
+d20_c_rmsd = project_root / 'results/20_500_rmsd_cor.db'
+d30_c_rmsd = project_root / 'results/30_500_rmsd_cor.db'
 
+d10_soap = project_root / 'results/10_500_soap.db'
+d20_soap = project_root / 'results/20_500_soap.db'
+d30_soap = project_root / 'results/30_500_soap.db'
 
-d10_soap = '/home/vito/PythonProjects/PythonProject/results/10_500_soap.db'
-d20_soap = '/home/vito/PythonProjects/PythonProject/results/20_500_soap.db'
-d30_soap = '/home/vito/PythonProjects/PythonProject/results/30_500_soap.db'
-
-d10_c_soap = '/home/vito/PythonProjects/PythonProject/results/10_500_soap_cor.db'
-d20_c_soap = '/home/vito/PythonProjects/PythonProject/results/20_500_soap_cor.db'
-d30_c_soap = '/home/vito/PythonProjects/PythonProject/results/30_500_soap_cor.db'
+d10_c_soap = project_root / 'results/10_500_soap_cor.db'
+d20_c_soap = project_root / 'results/20_500_soap_cor.db'
+d30_c_soap = project_root / 'results/30_500_soap_cor.db'
 
 
 def sql2df(sqlite_dir):

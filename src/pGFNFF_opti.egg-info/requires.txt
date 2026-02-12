@@ -1,0 +1,7 @@
+ase
+numpy
+matplotlib
+pandas
+dscribe
+optuna
+spglib

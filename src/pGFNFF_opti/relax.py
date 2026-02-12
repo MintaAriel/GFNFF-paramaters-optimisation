@@ -211,7 +211,7 @@ class Gulp_relaxation_noadd:
             self.molecule_labels = None
 
         try:
-            os.mkdir(os.path.join(self.path, 'CalcFold'))
+            os.makedirs(os.path.join(self.path, 'CalcFold'))
             print("Directory created!")
         except FileExistsError:
             print("Directory already exists, moving on.")

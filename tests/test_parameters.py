@@ -1,17 +1,14 @@
-from ase import Atoms
 from ase.io import read
-import matplotlib.pyplot as plt
-from ase.visualize import view
-import sys
-from dscribe.descriptors import SOAP
-from sklearn.metrics.pairwise import cosine_similarity
-import optuna
-from relax import Gulp_relaxation_noadd
+from pGFNFF_opti.relax import Gulp_relaxation_noadd
 import numpy as np
-from read_gulp import read_results
-from gnff_fine_tun import crystal_descriptor
+from pGFNFF_opti.read_gulp import read_results
+from pGFNFF_opti.gnff_fine_tun import crystal_descriptor
+from pathlib import Path
 
-experimental = read('/home/vito/PythonProjects/ASEProject/CARLO/gnff/Fine_tun/exp_2.cif')
+script_dir = Path(__file__).parent
+project_root = script_dir.parent
+
+experimental = read(project_root / 'data/experimental.cif')
 
 def get_parameters( gfnff_param):
     og_crystal = experimental.copy()
@@ -31,7 +28,8 @@ def get_parameters( gfnff_param):
         "maxcycle 20"
     )
 
-    cal_dir = '/home/vito/PythonProjects/PythonProject/Fine_tunning/experiment/test'
+    cal_dir = project_root / 'tests/single_param_cal'
+
     relax = Gulp_relaxation_noadd(path=cal_dir,
                                   library=None,
                                   gulp_keywords=gulp_input,

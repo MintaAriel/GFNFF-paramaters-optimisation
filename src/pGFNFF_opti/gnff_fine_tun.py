@@ -1,27 +1,9 @@
-from ase import Atoms
 from ase.io import read
-import matplotlib.pyplot as plt
-from ase.visualize import view
-import sys
 from dscribe.descriptors import SOAP
-from sklearn.metrics.pairwise import cosine_similarity
 import optuna
-from relax import Gulp_relaxation_noadd
+from .relax import Gulp_relaxation_noadd
 import numpy as np
-from read_gulp import read_results
-import argparse
-from pathlib import Path
-
-experimental = read('exp_2.cif')
-
-
-
-gfnff_scale = np.array( [0.546335 , 1.823183,  0.368031,  0.100,  2.440330])
-gfnff_my = np.array([ 0.70, 1.343, 0.727, 1.0, 1.41455 ])
-
-# view(experimental)
-
-
+from .read_gulp import read_results
 
 
 class crystal_descriptor():
@@ -69,8 +51,8 @@ class crystal_descriptor():
 
         return k
 
-def get_parameters( gfnff_param):
-    og_crystal = experimental.copy()
+def get_parameters( gfnff_param, molcrys, calc_dir):
+    og_crystal = molcrys.copy()
     scale_str = ' '.join([str(v)for v in gfnff_param])
     # gulp_input = (f"gradient conp conse qok c6 conp prop gfnff gwolf noauto\n"
     #               f"gfnff_scale {scale_str}\n"
@@ -87,23 +69,19 @@ def get_parameters( gfnff_param):
         "maxcycle 20"
     )
 
-    cal_dir = '/home/vito/PythonProjects/PythonProject/Fine_tunning/experiment'
-    relax = Gulp_relaxation_noadd(path=cal_dir,
+    relax = Gulp_relaxation_noadd(path=calc_dir,
                                   library=None,
                                   gulp_keywords=gulp_input,
                                   gulp_options=options)
     atom = relax.use_gulp(og_crystal)
-    calc = read_results(f"{cal_dir}/CalcFold/ginput1.got")
+    calc = read_results(f"{calc_dir}/CalcFold/ginput1.got")
 
     return atom, calc
 
 
 
 
-
-
-
-def tune_gfnff(delta_par, db_name, n_trials, fingerprint,  low_boundry=None, high_boundry=None):
+def tune_gfnff(delta_par, db_name, n_trials, fingerprint, project_dir, low_boundry=None, high_boundry=None):
     '''
 
     :param delta_par: the +- limit of the parameters for the optimisation
@@ -114,6 +92,10 @@ def tune_gfnff(delta_par, db_name, n_trials, fingerprint,  low_boundry=None, hig
     :param high_boundry:
     :return:
     '''
+    experimental = read(project_dir / 'data/experimental.cif')
+    gfnff_scale = np.array([0.546335, 1.823183, 0.368031, 0.100, 2.440330])
+    gfnff_my = np.array([0.70, 1.343, 0.727, 1.0, 1.41455])
+
     analyzer = crystal_descriptor(experimental)
     initial_vol = experimental.get_volume()
     print(initial_vol)
@@ -137,8 +119,10 @@ def tune_gfnff(delta_par, db_name, n_trials, fingerprint,  low_boundry=None, hig
             trial.suggest_float("p5", low_boundry[4], high_boundry[4]),
         ])
 
+        calc_dir = project_dir / 'tests/opt_calcs'
+
         try:
-            new_crys, crys_param = get_parameters(theta)
+            new_crys, crys_param = get_parameters(theta, experimental, calc_dir)
             relax_stat = True
         except Exception as e:
             print(e)
@@ -165,9 +149,9 @@ def tune_gfnff(delta_par, db_name, n_trials, fingerprint,  low_boundry=None, hig
             print('bad parameters')
         return score
 
-
+    db_path = project_dir / 'results' / f"{db_name}.db"
     study_name = db_name
-    storage_name = f"sqlite:///{study_name}.db"
+    storage_name = f"sqlite:///{db_path}"
 
     # optuna.delete_study(
     #     study_name=study_name,
@@ -184,25 +168,6 @@ def tune_gfnff(delta_par, db_name, n_trials, fingerprint,  low_boundry=None, hig
 
     print(study.best_params)
     print(study.best_value)
-
-
-def main():
-    ap = argparse.ArgumentParser(description="Compare ase operators")
-    ap.add_argument("--delta", type=float, default=0.1, help="delta for parameters from the og gfnff")
-    ap.add_argument("--name", type=str, default="tunning", help="db_name")
-    ap.add_argument("--trials", type=int, default=100, help="number of trials for Bayesian opt")
-    ap.add_argument("--descriptor", type=str, default="soap", help="ddescriptor for molecular crystal")
-
-    args = ap.parse_args()
-
-    tune_gfnff(delta_par=args.delta,
-               db_name=args.name,
-               n_trials=args.trials,
-               fingerprint= args.descriptor)
-
-# if __name__ == "__main__":
-#     main()
-
 
 
 

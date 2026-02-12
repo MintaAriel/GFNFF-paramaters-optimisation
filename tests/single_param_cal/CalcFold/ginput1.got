@@ -20,7 +20,7 @@
 ********************************************************************************
 
 
-  Job Started  at 14:03.26 11th February   2026                               
+  Job Started  at 18:30.32 12th February   2026                               
 
   Number of CPUs =     1
 
@@ -222,32 +222,32 @@
 
   Start of bulk optimisation :
 
-  Cycle:      0 Energy:      -204.934397  Gnorm:      4.523173  CPU:    0.195
+  Cycle:      0 Energy:      -204.934397  Gnorm:      4.523173  CPU:    0.342
   ** Hessian lowest eigenvalue is negative =  -2.123E+03
   ** Hessian calculated **
-  Cycle:      1 Energy:      -217.431062  Gnorm:      1.023261  CPU:    0.366
+  Cycle:      1 Energy:      -217.431062  Gnorm:      1.023261  CPU:    0.632
   ** Hessian lowest eigenvalue is negative =  -7.286E+01
   ** Hessian calculated **
-  Cycle:      2 Energy:      -219.219450  Gnorm:      0.702992  CPU:    0.651
-  Cycle:      3 Energy:      -220.096221  Gnorm:      0.146405  CPU:    0.784
-  Cycle:      4 Energy:      -220.148179  Gnorm:      0.091435  CPU:    0.919
-  Cycle:      5 Energy:      -220.209515  Gnorm:      0.107472  CPU:    1.090
-  Cycle:      6 Energy:      -220.247616  Gnorm:      0.128057  CPU:    1.231
-  Cycle:      7 Energy:      -220.303035  Gnorm:      0.059205  CPU:    1.410
-  Cycle:      8 Energy:      -220.327070  Gnorm:      0.065362  CPU:    1.557
-  Cycle:      9 Energy:      -220.337114  Gnorm:      0.057672  CPU:    1.702
-  Cycle:     10 Energy:      -220.356819  Gnorm:      0.037470  CPU:    1.882
-  Cycle:     11 Energy:      -220.365796  Gnorm:      0.025701  CPU:    2.028
+  Cycle:      2 Energy:      -219.219450  Gnorm:      0.702992  CPU:    1.118
+  Cycle:      3 Energy:      -220.096221  Gnorm:      0.146405  CPU:    1.343
+  Cycle:      4 Energy:      -220.148179  Gnorm:      0.091435  CPU:    1.568
+  Cycle:      5 Energy:      -220.209515  Gnorm:      0.107472  CPU:    1.863
+  Cycle:      6 Energy:      -220.247616  Gnorm:      0.128057  CPU:    2.102
+  Cycle:      7 Energy:      -220.303035  Gnorm:      0.059205  CPU:    2.401
+  Cycle:      8 Energy:      -220.327070  Gnorm:      0.065362  CPU:    2.648
+  Cycle:      9 Energy:      -220.337114  Gnorm:      0.057672  CPU:    2.898
+  Cycle:     10 Energy:      -220.356819  Gnorm:      0.037470  CPU:    3.199
+  Cycle:     11 Energy:      -220.365796  Gnorm:      0.025701  CPU:    3.444
   ** Hessian calculated **
-  Cycle:     12 Energy:      -220.389278  Gnorm:      0.022536  CPU:    2.448
-  Cycle:     13 Energy:      -220.408591  Gnorm:      0.027087  CPU:    2.628
-  Cycle:     14 Energy:      -220.410718  Gnorm:      0.025476  CPU:    2.807
-  Cycle:     15 Energy:      -220.411983  Gnorm:      0.014760  CPU:    2.952
-  Cycle:     16 Energy:      -220.412684  Gnorm:      0.008368  CPU:    3.097
-  Cycle:     17 Energy:      -220.413118  Gnorm:      0.013709  CPU:    3.277
-  Cycle:     18 Energy:      -220.413330  Gnorm:      0.004032  CPU:    3.456
-  Cycle:     19 Energy:      -220.413387  Gnorm:      0.002425  CPU:    3.602
-  Cycle:     20 Energy:      -220.413400  Gnorm:      0.001741  CPU:    3.747
+  Cycle:     12 Energy:      -220.389278  Gnorm:      0.022536  CPU:    4.150
+  Cycle:     13 Energy:      -220.408591  Gnorm:      0.027087  CPU:    4.451
+  Cycle:     14 Energy:      -220.410718  Gnorm:      0.025476  CPU:    4.759
+  Cycle:     15 Energy:      -220.411983  Gnorm:      0.014760  CPU:    5.003
+  Cycle:     16 Energy:      -220.412684  Gnorm:      0.008368  CPU:    5.248
+  Cycle:     17 Energy:      -220.413118  Gnorm:      0.013709  CPU:    5.546
+  Cycle:     18 Energy:      -220.413330  Gnorm:      0.004032  CPU:    5.859
+  Cycle:     19 Energy:      -220.413387  Gnorm:      0.002425  CPU:    6.116
+  Cycle:     20 Energy:      -220.413400  Gnorm:      0.001741  CPU:    6.373
 
 
   **** Maximum number of function calls has been reached ****
@@ -666,7 +666,7 @@
 -------------------------------------------------------------------------------
 
 
-  Time to end of optimisation =       4.0800 seconds
+  Time to end of optimisation =       6.9679 seconds
 
 
 
@@ -727,21 +727,21 @@
 --------------------------------------------------------------------------------
   Task / Subroutine                                          Time (Seconds)
 --------------------------------------------------------------------------------
-  Calculation of reciprocal space energy and derivatives          0.2129
-  Calculation of real space energy and derivatives                0.3760
-  Generation of GFNFF parameters                                  0.0039
-  Calculation of GFNFF energy and derivatives                     3.4784
-  Calculation and manipulation of Hessian matrix                  0.0011
-  Calculation of matrix inversion                                 0.0008
-  Electronegativity equalisation                                  0.2852
-  Calculation of variable charge 2nd derivatives                  0.0297
+  Calculation of reciprocal space energy and derivatives          0.3595
+  Calculation of real space energy and derivatives                0.6342
+  Generation of GFNFF parameters                                  0.0087
+  Calculation of GFNFF energy and derivatives                     5.9426
+  Calculation and manipulation of Hessian matrix                  0.0019
+  Calculation of matrix inversion                                 0.0014
+  Electronegativity equalisation                                  0.4803
+  Calculation of variable charge 2nd derivatives                  0.0511
 --------------------------------------------------------------------------------
-  Total CPU time                                                  4.0800
+  Total CPU time                                                  6.9681
 --------------------------------------------------------------------------------
 
 
   CIF file written as out1.cif
 
 
-  Job Finished at 14:03.30 11th February   2026                               
+  Job Finished at 18:30.39 12th February   2026                               
 
