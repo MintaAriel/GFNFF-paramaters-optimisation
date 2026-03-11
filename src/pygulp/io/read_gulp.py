@@ -45,7 +45,7 @@ def read_results(GULP_output):
                     volume = total[-1].split()[0]
                 else:
                     volume = 0
-    # print(internal_dev)
+    # print(energy_lis)
 
     fixed_inter_dev = re.sub(r'(?<=\d)-(?=\d)', ' -', internal_dev)
     df_gradient = pd.read_csv(io.StringIO(fixed_inter_dev),
@@ -76,7 +76,7 @@ def read_results(GULP_output):
 
     result = {'strain': eps_tensor,
               'gradient': gradient.astype(float) ,
-              'energy': energy_lis[0],
+              'energy': energy_lis,
               'volume':volume}
 
 

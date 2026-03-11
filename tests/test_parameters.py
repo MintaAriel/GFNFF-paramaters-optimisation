@@ -1,8 +1,8 @@
 from ase.io import read
-from pGFNFF_opti.relax import Gulp_relaxation_noadd
+from pygulp.relaxation.relax import Gulp_relaxation_noadd
 import numpy as np
-from pGFNFF_opti.read_gulp import read_results
-from pGFNFF_opti.gnff_fine_tun import crystal_descriptor
+from pygulp.io.read_gulp import read_results
+from pygulp.forcefields.gnff_fine_tun import crystal_descriptor
 from pathlib import Path
 
 script_dir = Path(__file__).parent

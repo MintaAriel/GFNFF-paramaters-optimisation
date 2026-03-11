@@ -247,6 +247,7 @@ class Gulp_relaxation_noadd:
                                 # maybe Optional Parameters
                                 library=library,
                                 conditions=labels)
+
         else:
             calculator = MyGULP(keywords=keyword,
                                 # goutput file parameters from USPEX
@@ -256,8 +257,14 @@ class Gulp_relaxation_noadd:
 
         return calculator
 
-    def use_gulp(self, atom):
+    def use_gulp(self, atom, point_cal=False):
+        '''
 
+        :param atom:
+        :param point_cal: True if it requires a point calculation, for that reason the limit of the
+        gulp excecution is 6 seconds to prevent crashes of the program
+        :return:
+        '''
         try:
             ginput_dir = os.path.join(self.path, 'Specific')
         except:
@@ -277,6 +284,8 @@ class Gulp_relaxation_noadd:
             #print(self.gulp_options)
             calc = self.number_of_optmi(self.gulp_keywords , self.gulp_options , atom, library[i - 1])
             calc.prefix = f'ginput{i}'
+            if point_cal:
+                calc.command = f'timeout 6s gulp <ginput{i}.gin> ginput{i}.got'
 
             calc.directory = os.path.join(self.path, 'CalcFold')
             try:

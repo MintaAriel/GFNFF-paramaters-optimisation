@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib.style.core import library
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.io.ase import AseAtomsAdaptor
 from huggingface_hub import login
@@ -102,7 +103,7 @@ class transformASU():
 
         return atom_rot
 
-    def energy_ASU(self, ASU_to_calc, cal_dir, bonds_dir):
+    def energy_ASU(self, ASU_to_calc, cal_dir, bonds_dir, library):
         '''
         This function calls GULP to compute the gradients of the energy and the stress in the cell, the gradients are in
         fractional coordinates, it returns a dictionary with results.
@@ -118,19 +119,32 @@ class transformASU():
         connections = ''
         # bonds = pd.read_json('bonds.json')
         bonds = read_connections(bonds_dir)
+        relax = None
         for n in range(int(mol_in_asym)):
             for bond in range(len(bonds)):
                 delta = n * int((len(self.ASU)/self.mol_per_ASU))
                 connections += 'connect  ' + str(bonds['atom1'][bond] + delta) + ' ' + str(
                     bonds['atom2'][bond] + delta) + '\n'
 
-        gulp_input = f'gradient conp\npressure {pressure} GPa'
+        if library == 'reaxff':
+            gulp_input = f'gradient conp\npressure {pressure} GPa'
+            options = f'spacegroup\n{self.sym_group}\n\n{connections}\noutput movie cif out1.cif\ndump every  optimized.structure paso.cif'
+            relax = Gulp_relaxation_noadd(cal_dir, 'reaxff_general.lib', gulp_input, options)
+            new = relax.use_gulp(ASU_to_calc)
 
-        options = f'spacegroup\n{self.sym_group}\n\n{connections}\noutput movie cif out1.cif\ndump every  optimized.structure paso.cif'
+        elif library == 'gfnff':
+            gulp_input = (f"gradient conp conse qok c6 conp gfnff gwolf noauto\n"
+                          f"gfnff_scale 0.8 1.343 0.727 1.0 2.859\n"
+                          f"maths mrrr"
+                          f"pressure {pressure}  GPa"
+                          )
+            options = f'spacegroup\n{self.sym_group}\n\n{connections}\noutput movie cif out1.cif\ndump every  optimized.structure paso.cif'
+            relax = Gulp_relaxation_noadd(cal_dir, None, gulp_input, options)
 
-        relax = Gulp_relaxation_noadd(cal_dir, 'reaxff_general.lib', gulp_input, options)
-        new = relax.use_gulp(ASU_to_calc)
-        # print(new)
+            new = relax.use_gulp(ASU_to_calc, point_cal=True)
+
+
+
         calc = read_results(cal_dir + '/CalcFold/ginput1.got')
 
         return calc
@@ -262,8 +276,8 @@ class GradientDescentBase(ABC):
         rotations = np.repeat(np.eye(3)[None, :, :], int(self.n_mol_asu), axis=0)
         cell_change_0 = self.asu.cell
 
-        if traj:
-            trajectory = Trajectory(os.path.join(self.work_dir, f'gulp_sim.trajectory'), 'w')
+        # if traj:
+        # trajectory = Trajectory(os.path.join(self.work_dir, f'gulp_sim.trajectory'), 'w')
 
         cell_step = 0
         increment = 0.05
@@ -272,12 +286,12 @@ class GradientDescentBase(ABC):
                                              mol_rotational_matrix=rotations,
                                              cell_vector=cell_change_0)
 
-            if traj:
-                #reconstruction of the full cell
-                full_new_ASU = self.struc_change.get_full_sym_cell(new_ASU)
-                full_new_ASU.set_pbc([True, True, True])
-                full_new_ASU.set_tags([i for i in range(n_mol_cell) for _ in range(atoms_per_mol)])
-                trajectory.write(full_new_ASU)
+            # if traj:
+            #reconstruction of the full cell
+            full_new_ASU = self.struc_change.get_full_sym_cell(new_ASU)
+            full_new_ASU.set_pbc([True, True, True])
+            full_new_ASU.set_tags([i for i in range(n_mol_cell) for _ in range(atoms_per_mol)])
+            # trajectory.write(full_new_ASU)
 
             positions = new_ASU.get_positions().reshape(self.n_mol_asu, atoms_per_mol, 3)
             R0 = positions.mean(axis=1)
@@ -316,7 +330,7 @@ class GradientDescentBase(ABC):
             elif results['energy'] < min(self.energies):
                 best_energy = results['energy']
                 self.best_structure = full_new_ASU
-                write(os.path.join(self.work_dir, 'best_structure.cif'),self. best_structure)
+                # write(os.path.join(self.work_dir, 'best_structure.cif'),self. best_structure)
                 print('This is the lowest so far', best_energy)
 
             self.energies.append(results['energy'])
@@ -344,17 +358,18 @@ class GradientDescentBase(ABC):
             else:
                 pass
 
-        if traj:
-            trajectory.close()
+        # if traj:
+        # trajectory.close()
 
 
 class GradientDescentGULP(GradientDescentBase):
 
-    def __init__(self, structure, work_dir, connections):
+    def __init__(self, structure, work_dir, connections, library='reaxff'):
         super().__init__(structure, work_dir, connections)
+        self.library = library
         self.name = 'gulp'
         self.eta_t = 80e-4
-        self.eta_r = 5e-6
+        self.eta_r = 5e-5
         self.eta_c = 500e-8
 
 
@@ -364,8 +379,10 @@ class GradientDescentGULP(GradientDescentBase):
             calculator = self.struc_change.energy_ASU(
                 ASU_to_calc=new_ASU,
                 cal_dir=self.work_dir,
-                bonds_dir=self.connections
+                bonds_dir=self.connections,
+                library=self.library
             )
+            calculator['energy'] = calculator['energy'][0]
         except Exception as e:
             print('The symmetry was broken')
             print(e)
